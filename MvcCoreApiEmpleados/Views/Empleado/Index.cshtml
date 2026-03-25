@@ -1,0 +1,137 @@
+﻿@model List<Empleado>
+
+@section style{
+    <style>
+        :root {
+            --accent-color: #10b981; /* Un verde esmeralda vibrante */
+            --dark-text: #1f2937;
+            --light-bg: #f9fafb;
+        }
+
+        .custom-card {
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+            background: white;
+        }
+
+        .title-gradient {
+            color: var(--dark-text);
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .form-select, .btn-filter {
+            border-radius: 10px !important;
+            padding: 0.6rem 1rem;
+        }
+
+        .btn-filter {
+            background-color: var(--dark-text);
+            color: white;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+            .btn-filter:hover {
+                background-color: #000;
+                transform: translateY(-1px);
+                color: white;
+            }
+
+        .table thead th {
+            background-color: var(--light-bg);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            color: #6b7280;
+            border-top: none;
+        }
+
+        .badge-oficio {
+            background-color: #f3f4f6;
+            color: #374151;
+            font-weight: 500;
+            border: 1px solid #e5e7eb;
+        }
+
+        .salary-text {
+            color: var(--accent-color);
+            font-family: 'Monaco', monospace;
+            font-weight: 600;
+        }
+    </style>
+}
+
+<div class="container mt-5">
+    <div class="custom-card shadow-sm">
+        <div class="card-body p-5">
+            <h2 class="title-gradient mb-4">Panel de Empleados</h2>
+
+            <form method="post" class="row g-3 align-items-end mb-5">
+                <div class="col-md-4">
+                    <label for="oficio" class="form-label small fw-bold text-uppercase text-muted">Filtrar por puesto</label>
+                    <select name="oficio" id="oficio" class="form-select border-2">
+                        <option value="">Mostrar todos...</option>
+                        @foreach (string oficio in ViewBag.Oficios)
+                        {
+                            <option value="@oficio">@oficio</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-filter w-100 fw-bold">
+                        Aplicar
+                    </button>
+                </div>
+            </form>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th class="ps-0">ID</th>
+                            <th>Empleado</th>
+                            <th>Puesto</th>
+                            <th class="text-end">Compensación</th>
+                            <th class="text-center">Depto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var emp in Model)
+                            {
+                                <tr>
+                                    <td class="text-muted small ps-0">#@emp.IdEmpleado</td>
+                                    <td class="fw-bold text-dark">@emp.Apellido</td>
+                                    <td>
+                                        <span class="badge badge-oficio px-3 py-2">@emp.Oficio</span>
+                                    </td>
+                                    <td class="text-end salary-text">
+                                        @emp.Salario.ToString("N0") €
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="d-inline-block px-2 py-1 rounded bg-light border text-muted small">
+                                            @emp.IdDepartamento
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center py-5">
+                                    <div class="text-muted">
+                                        <i class="bi bi-search d-block fs-1 mb-2"></i>
+                                        No se encontraron registros para este criterio.
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
